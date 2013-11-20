@@ -2,7 +2,7 @@ import re, MySQLdb
 from bottle import route, run, template, static_file
 
 tags = {}
-#db = MySQLdb.connect(host="localhost", user="appuser", passwd="",db="onco")
+db = MySQLdb.connect(host="localhost", user="hci", passwd="hci",db="career")
 cursor = db.cursor()
 
 resultsPerPage = 4
@@ -21,7 +21,7 @@ def profile():
 def search():
     return template('search.tpl')
     
-@route('/search/<page>/<regex:ex>')
+@route('/search/<page>/<regex>')
 def search(page, regex):
 	args = regex.split('+')
 	
@@ -103,8 +103,4 @@ def OrderedSet(list):
 
 	
 
-<<<<<<< HEAD
 run(host='ec2-54-234-44-211.compute-1.amazonaws.com', port=8080)
-=======
-run(host='ec2-54-234-44-211.compute-1.amazonaws.com', port=8080)
->>>>>>> upstream/master
