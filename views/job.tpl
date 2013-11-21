@@ -59,7 +59,7 @@
       <div class="row marketing">
         <div class="col-md-4">
           <h4>Company</h4>
-          <p id="company"></p>
+ 	<p><a id="company"></a></p>
 	</div>
 	<div class="col-md-4">
           <h4>Locations</h4>
@@ -88,6 +88,7 @@
 		$('#name').text(elements.name);
                 $('#description').text(elements.description);
                 $('#company').text(elements.company);
+		$('#company').attr("href", "/company/"+elements.company);
                 $('#positions').append("<p>"+elements.positions+"</p>")
                 $('#locations').append("<p>"+elements.locations+"</p>")
 		$('apply').attr("href", "/apply/"+id);
@@ -111,7 +112,7 @@
 		var id = element.id;
 		
 		document.getElementById("job").innerHTML = "<h1>" + element.name + "</h1>";
-		document.getElementById("job").innerHTML+="<h3>"+element.company+"</h3>";
+		document.getElementById("job").innerHTML+="<h3><a href=\"/company/"+element.company+"\">"+element.company+"</a></h3>";
                 document.getElementById("job").innerHTML+="<div class=\"pull-right\"><button type=\"button\" class=\"btn btn-success\" id=\"apply\">Apply</button></div>";
 		document.getElementById("job").innerHTML+="<p>Position(s): "+element.positions+"</p>";
 		document.getElementById("job").innerHTML+="<div><p>Location(s): "+element.locations+"</p><div>";

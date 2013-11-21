@@ -223,17 +223,21 @@ def tag(job,newTag):
 
 @route('/comp/<compname>')
 def addRemoveComp(compname):
+	print "to remove = " + str(compname)
+	iremoved = 0
 	for co in fave_comp:
 		if co == compname:
 			fave_comp.remove(co)
 			print "removed " + co
+			iremoved = 1
 			break
-	fave_comp.append(compname)
-	print "added " + compname
+	if (iremoved == 0) :
+		fave_comp.append(compname)
+		print "added " + compname
 
 @route('/doc/<type>/<key>/<link>')
 def docMethods(type, key, link):
-	print "in add/delete documents"
+	print "in add/delete documents - " + key
 	if type == "delete":
 		del doc[key]
 		print "delete doc"
@@ -247,6 +251,11 @@ def docAdd():
 	link = request.forms.get('link')
 	doc[filename] = link
 	print "just added doc"
+
+@route('/rmv/job/<id>')
+def removeJob(id):
+	del companies[id]
+	print "deleted " + str(id) + " from companies"
 	
 def generatePage(m,current):
     page = current //4

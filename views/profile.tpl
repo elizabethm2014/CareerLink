@@ -287,11 +287,13 @@
 		}
 
 		function DeleteJob(id) {
-			$.get("/job/"+id);
+			alert(id);
+			$.get("/rmv/job/"+id);
 		}
 
 		function DeleteComp(comp) {
-			$get("/comp/"+comp);
+			alert(comp.id);
+			$.get("/comp/"+comp.id);
 		}
 	</script>
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) 
