@@ -56,7 +56,7 @@
 	<div class="row search">
     		<form role="form">
     		    <div class="input-group">
-					<input id="search" type="text" class="form-control input-sm" placeholder="Search here!">
+					<input id="search" type="text" class="form-control input-sm" placeholder="Search here - enter keywords, company names, locations, position type, etc.">
     		        <span class="input-group-btn">
         		        <button class="btn btn-default btn-sm" type="submit"><span class="glyphicon glyphicon-search"></span></button>
     			    </span>

@@ -58,20 +58,78 @@
 				<td><a href="/company/{{job[1]}}">{{job[1]}}</a></td>
 				<td>{{job[2]}}</td>
 				<td>{{job[3]}}</td>
-				<td><button type="button" class="btn btn-default" id="star{{job[0]}}"></button></td>
+				<td><button type="button" class="btn btn-default" onclick="resetStar(star{{job[0]}}_{{job[1]}})" id="star{{job[0]}}_{{job[1]}}"><span class="glyphicon glyphicon-star-empty"></span></button></td>
 			</tr>
+			<div class="hidden" id="info_star{{job[0]}}">{{job[1]}}</div>
 			%end
 		</tbody>
 	</table>
 	</div>
 	<script type="text/javascript">
 		function setStar() {
-			for (var i = 0; i < document.getElementById("companies").rows -1; i++) {
+			alert("in setStar - " + document.getElementById("companies").rows.length);
+			for (var i = 0; i < document.getElementById("companies").rows.length; i++) {
 				var nextstar = "star" + i;
-				document.getElementById(nextstar).innerHTML = "<span class=\"glyphicon glyphicon-star-empty\"></span>";
+				//alert("nextstar id = " + nextstar);
+				if (document.getElementById(nextstar) != null) {
+					document.getElementById(nextstar).innerHTML = "<span class=\"glyphicon glyphicon-star-empty\"></span>";
+					//document.getElementById(nextstar).addEventListener("click", resetStar(nextstar), false);
+	/*				document.getElementById(nextstar).addEventListener("click", function() {
+
+if (starOn[id] == 1) {
+                                starOn[id] = 0;
+                                document.getElementById(id).innerHTML = "<span class=\"glyphicon glyphicon-star-empty\"></span>";
+
+                        } else {
+                                starOn[id] = 1;
+                                document.getElementById(id).innerHTML = "<span class=\"glyphicon glyphicon-star\"></span>";
+
+
+}, false);*/
+					starOn[i] = 0;
+				}
 			}
 		}
 		document.addEventListener("DOMContentLoaded", setStar, false);
+
+		var starOn = new Array(); //0 = empty
+                function resetStar(info1) {
+			var info = info1.id;
+			var arr = info.split("_");
+			var id = arr[0];
+			var company = arr[1];
+			var starid = id.split("r")[1];
+			alert(company + " and " + id);
+                        //%if fave == true:
+			//var company = document.getElementById("info_"+id).innerHTML;
+			alert("in reset star! " + starid);
+                        if (starOn[starid] == 1) {
+				alert("empty!");
+				starOn[starid] = 0;
+				
+                                document.getElementById(info).innerHTML = "<span class=\"glyphicon glyphicon-star-empty\"></span>";
+                        } else {
+				alert("fill!");
+				starOn[starid] = 1;
+                                //id.innerHTML = "<span class=\"glyphicon glyphicon-star\"></span>";
+				document.getElementById(info).innerHTML = "<span class=\"glyphicon glyphicon-star\"></span>";
+                        }
+			$.get("/comp/"+company);
+                }
+
+/*              function changeStar(id) {
+                        if (starOn[id] == 1) {
+                                starOn[id] = 0;
+				document.getElementById(id).innerHTML = "<span class=\"glyphicon glyphicon-star-empty\"></span>";
+
+                        } else {
+                                starOn[id] = 1;
+				document.getElementById(id).innerHTML = "<span class=\"glyphicon glyphicon-star\"></span>";
+
+                        }
+                }
+*/
+
 	</script>
     
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>

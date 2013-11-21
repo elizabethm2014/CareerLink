@@ -45,23 +45,45 @@
 	<div class="container">
 		<h1>{{job[1]}}</h1>
 		<h3>{{job[2]}}</h2>
+		<h3>Choose an existing file or upload a new one.</h3>
+	          <div class="checkbox">
+        	        %for doc in docs:
+        		    <label>
+        		      <input type="checkbox">{{doc}}
+        		    </label>
+                	%end
+          	</div>
+
 		<form role="form">
-	  <div class="form-group">
-	  <div class="form-group">
-	    <label for="exampleInputFile">File input</label>
-	    <input type="file" id="exampleInputFile">
-	    <p class="help-block">Example block-level help text here.</p>
+	  	<div class="form-group">
+	  		<div class="form-group">
+	    			<label for="exampleInputFile">Filename: </label>
+	    			<input type="text" id="exampleInputFile">
+			</div>
+			<div class="form-group">
+				<label for="link">Link: </label>
+				<input type="text" id="link">
+			</div>
+		</div>
+		</form>
+		<button type="button" class="btn btn-default" onclick="AddDoc()">Submit</button>;
+
 	  </div>
-	  <div class="checkbox">
-		%for doc in docs:
-	    <label>
-	      <input type="checkbox">{{doc}}
-	    </label>
-		%end
-	  </div>
-	  <button type="submit" class="btn btn-default">Submit</button>
-	</form>
-	</div>
+
+               <script type="text/javascript">
+
+                function AddDoc() {
+			//add doc
+                        var file = document.getElementById("fileName").value;
+                        var link = document.getElementById("link").value;
+                        alert("file = " + file + "and link = " + link);
+                        $.get("/doc/add/"+file+"/"+link);
+			//submit form
+			//aka mark as applied???
+			
+                }
+		</script>
+
 	
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) 
     <script type="text/javascript" src="https://code.jquery.com/jquery.js"></script>-->

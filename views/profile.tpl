@@ -171,8 +171,8 @@
 							<!--script type="text/javascript">alert({{item}});
 							alert({{item[0]}});</script-->
 							<td><button type="button" class="btn btn-default btn-sm" onclick="DeleteJob({{item[0]}})"><span class="glyphicon glyphicon-trash"></span></button></td>
-							<td>{{item[1]}}</td>
-							<td>{{item[2]}}</td>
+							<td><a href="/job/{{item[0]}}">{{item[1]}}</a></td>
+							<td><a href="/company/{{item[2]}}">{{item[2]}}</a></td>
 							<td>{{item[3]}}</td>
 							<td>{{item[4]}}</td>
 						</tr>	
@@ -180,11 +180,6 @@
 					</tbody>
 				</table>
 			</div>
-			%for item in jobs:
-			<p>start of item</p>
-			<p>{{item}}</p>
-			<p>end of item<p>
-			%end
 		  </div>
 		  <div class="panel panel-default">
 			<div class="panel-heading">
@@ -208,7 +203,7 @@
 				<tbody>
 					%for comp in fave_comps:
 					<tr>
-						<td><button type="button" class="btn btn-default btn-sm" id="{{comp}}" onclick="DeleteJob({{comp}})"><span class="glyphicon glyphicon-trash"></span></button></td>
+						<td><button type="button" class="btn btn-default btn-sm" id="{{comp}}" onclick="DeleteComp({{comp}})"><span class="glyphicon glyphicon-trash"></span></button></td>
 						<td><a href="/company/{{comp}}">{{comp}}</a></td>
 						<td><center><span class="glyphicon glyphicon-ok"></span></center></td>
 					</tr>
@@ -228,7 +223,8 @@
 			<div id="collapseThree" class="panel-collapse collapse">
 			  <div class="panel-body">
 			  </div>
-			  <table class="table" id="documents">
+			  <div class="row"><div class="col-md-8">
+				<table class="table table-condensed" id="documents">
 				<thead>
 					<tr>
 						<th></th>
@@ -240,18 +236,64 @@
 				<tbody>
 					%for key in docs:
 					<tr>
-						<td><button type="button" class="btn btn-default btn-sm" id="{{key}}" onclick="DeleteJob({{key}})"><span class="glyphicon glyphicon-trash"></span></button></td>
-						<td><button type="button" class="btn btn-default btn-sm"><a href="{{docs[key]}}"><span class="glyphicon glyphicon-pencil"></span></a></button></td>
+						<td><button type="button" class="btn btn-default btn-sm" id="{{key}}" onclick="DeleteDoc({{key}})"><span class="glyphicon glyphicon-trash"></span></button></td>
+						<td><button type="button" class="btn btn-default btn-sm"><a href="{{docs[key]}}" target="_blank"><span class="glyphicon glyphicon-pencil"></span></a></button></td>
+ 
 						<td>{{key}}</td>
 					</tr>
 					%end
 				</tbody>
 			  </table>
-			  <button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> Add Document</button>
+			  <!--<button type="button" class="btn btn-default btn-sm" id="add_doc"><span class="glyphicon glyphicon-plus"></span> Add Document</button>-->
+			<div id="add_button"></div>
+			</div></div>	
+			   <div id="new_doc_form">
+			    </div>
 			</div>
 		  </div>
 		</div>
 	</div>
+	<script type="text/javascript">
+		
+		function unhideform() {
+			//document.getElementById("new_doc_form").innerHTML =  "<form role=\"form\" action=\"/doc/add/\" method=\"post\"><div class=\"form-group\"><div class=\"form-group\"><label for=\"filename\">Document Name: </label><input type=\"text\" id=\"fileName\"></div><div class=\"form-group\"><label for=\"link\">Link: </label><input type=\"text\" id=\"link\"> </div> </div>       <button type=\"submit\" class=\"btn btn-default\" >Submit</button></form>";
+			document.getElementById("new_doc_form").innerHTML =  "<p>Add new document:</p><form class=\"form-horizontal\" role=\"form\" ><div class=\"form-group\"><label class=\"sr-only\" for=\"filename\">Document Name:</label><div class=\"col-sm-10\"><input type=\"text\" class=\"form-control\" id=\"fileName\" placeholder=\"Filename\"></div></div><div class=\"form-group\"><label class=\"sr-only\" for=\"link\">Link:</label><div class=\"col-sm-10\"><input class=\"form-control\" type=\"text\" id=\"link\" placeholder=\"Link\"></div> </div> </div> </form> <button type=\"button\" class=\"btn btn-default\" onclick=\"AddDoc()\">Submit</button><button type=\"button\" class=\"btn btn-default\" onclick=\"startup()\">Cancel</button>";    
+//  <input type=\"submit\" class=\"btn btn-default\" onclick=\"AddDoc()\" value=\"Submit\"></form>";
+			document.getElementById("add_button").innerHTML = "";
+		}
+
+		document.addEventListener("DOMContentLoaded", startup, false);
+
+		function AddDoc() {
+		
+			var file = document.getElementById("fileName").value;
+			var link = document.getElementById("link").value;
+			alert("file = " + file + "and link = " + link);
+			$.get("/doc/add/"+file+"/"+link);
+			document.getElementById("new_doc_form").innerHTML = "";	
+		}
+
+		function startup() {
+			document.getElementById("new_doc_form").innerHTML = "";
+			document.getElementById("add_button").innerHTML = "<button type=\"button\" class=\"btn btn-default btn-sm\" id=\"add_doc\"><span class=\"glyphicon glyphicon-plus\"></span> Add Document</button>";
+
+			document.getElementById("add_doc").addEventListener("click", unhideform, false);
+		}
+
+		function DeleteDoc(key) {
+			alert(key.id);
+			var val = key.id
+			$.get("/doc/delete/"+val+"/0");
+		}
+
+		function DeleteJob(id) {
+			$.get("/job/"+id);
+		}
+
+		function DeleteComp(comp) {
+			$get("/comp/"+comp);
+		}
+	</script>
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) 
     <script type="text/javascript" src="https://code.jquery.com/jquery.js"></script>-->
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>

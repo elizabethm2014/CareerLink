@@ -53,7 +53,7 @@
 		<div class="row search">
     		<form role="form">
     		    <div class="input-group">
-					<input id="search" type="text" class="form-control input-sm" placeholder="Search here!">
+					<input id="search" type="text" class="form-control input-sm" placeholder="Search here - enter keywords, company names, locations, position type, etc.">
     		        <span class="input-group-btn">
         		        <button class="btn btn-default btn-sm" type="submit"><span class="glyphicon glyphicon-search"></span></button>
     			    </span>
@@ -69,7 +69,7 @@
     			<span class='card-title'></span>
     		</div>
     		<div class='col-md-4'>
-    			<div class='pull-right'><button type='button' class='btn btn-lg btn-success'>Apply Now!</button></div>
+    			<div class='pull-right'><a class="apply"><button type='submit' class='btn btn-lg btn-success'>Apply Now!</button></a></div>
     		</div>
     	</div>
     </div>
@@ -79,7 +79,8 @@
     		</div>
     		<div class='col-md-2'>
     			<ul class='list-group'>
-  					<li class='list-group-item'><strong>Posted: </strong><span class='label label-default pull-right posted'></span></li>
+  					<li class='list-group-item'><strong>Company: </strong><span class='company'></span></li>
+
   					<a class='list-group-item positions'>
   						   <strong class='list-group-item-heading'>Positions</strong>
     				</a>
@@ -105,7 +106,7 @@
   	</div>
 </div>
 		</div>
-
+</ul>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script type="text/javascript" src="/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
     
@@ -113,18 +114,19 @@
     	var tags = [];
 	function renderElement(elements){
 		if(elements == null){return;}
-		var id = elements.name.replace(/ /g,'');
+		var id = elements.id;
 		$('<div/>', {'id':id}).appendTo("#main");
 		$("#"+id).prepend($("#template").html());
 		
 		$('#'+id+' .card-title').text(elements.name);
 		$('#'+id+' .text').text(elements.text);
-		$('#'+id+' .posted').text(elements.posted);
+		$('#'+id+' .company').text(elements.company);
 		$('#'+id+' .due').text(elements.due);
-		$('#'+id+' .positions').append("<br><small class='list-group-item-text'>"+elements.positions+"</small>")
+		$('#'+id+' .positions').append("<br><small class='list-group-item-text'>"+elements.positions+"</small>");
 		$('#'+id+' .description').text(elements.description);	
-		$('#'+id+' .locations').append("<br><small class='list-group-item-text'>"+elements.locations+"</small>")
-		
+		$('#'+id+' .locations').append("<br><small class='list-group-item-text'>"+elements.locations+"</small>");
+		$('#'+id+' .apply').attr("href", "/job/"+id);
+	
 		var i=0;
 		while(tag = elements.tags[i++]){
 			$('#'+id+' .tags').append("<option value='"+tag+"'>"+tag+"</option>")
@@ -136,7 +138,7 @@
 }		
 	% count = 0
 	% setdefault('jobs', 'None')
-	% print jobs
+	% print str(count) 
 	%if jobs is not None:
 	%	for job in jobs:
 			{{!"var v"+str(count)+" = "+job+";"}}
@@ -155,4 +157,31 @@ $('#search').keypress(function(e) {
     </script>
     
   </body>
+<footer>
+<div class="text-center">
+<ul class="pagination">
+%if max < 4:
+%if current==0:
+<li class="disabled"><a>&laquo;</a></li>
+%else:
+<li> <a href="/search/{{current//4-1}}/{{query}}">&laquo;</a></li>
+%end	
+%print paginateArray
+%for page in paginateArray:
+%if current//4 == page:
+	<li class="active"> <a href="/search/{{page}}/{{query}}">{{page+1}}</a></li>
+%else:
+	<li> <a href="/search/{{page}}/{{query}}">{{page+1}}</a></li>
+%end
+%end
+
+%if (max-current)<4:
+<li class="disabled"><a>&raquo;</a></li>
+%else:
+<li> <a href="/search/{{current//4+1}}/{{query}}">&raquo;</a></li>
+%end
+%end
+</ul>
+</div>
+</footer>
 </html>

@@ -44,7 +44,7 @@ def do_login():
 @route('/profile')
 def profile():
     tagged_jobs = []
-    fave_comp = ['Microsoft', 'Google']
+    #fave_comp = ['Microsoft', 'Google']
     cursor.execute("select * from jobs where id=3")
     doc['resume'] = "https://docs.google.com/document/d/1xg9qO9_mfHjFcZdIRrZLBEH6xvNraLI5Rkfu3EDafcA/edit#heading=h.3nqr2w2ztd8"
     #for row in cursor.fetchall() :
@@ -88,35 +88,35 @@ def search(page, regex):
 			if "/" in arg:
 				#date select method
 				continue
-				
 			cursor.execute("SELECT * FROM jobs WHERE company=%s",arg)
 			for row in cursor.fetchall():
 				result.append(parseJobObject(row))
-			
-			cursor.execute("SELECT * FROM jobs WHERE title LIKE %s",arg)
+			cursor.execute("SELECT * FROM jobs WHERE title LIKE %s","%"+arg+"%")
 			for row in cursor.fetchall():
 				result.append(parseJobObject(row))
 			
-			cursor.execute("SELECT * FROM jobs WHERE location LIKE %s",arg)
+			print len(result)	
+			cursor.execute("SELECT * FROM jobs WHERE location LIKE %s","%"+arg+"%")
 			for row in cursor.fetchall():
 				result.append(parseJobObject(row))
 			
 			#Position select
-			cursor.execute("SELECT * FROM jobs WHERE position LIKE %s",arg)
+			cursor.execute("SELECT * FROM jobs WHERE position LIKE %s","%"+arg+"%")
 			for row in cursor.fetchall():
 				result.append(parseJobObject(row))
 			
 			#Maybe a description select?!?
-			cursor.execute("SELECT * FROM jobs WHERE description LIKE %s",arg)
+			cursor.execute("SELECT * FROM jobs WHERE description LIKE %s","%"+arg+"%")
 			for row in cursor.fetchall():
 				result.append(parseJobObject(row))
-
+			
 	result = OrderedSet(result)
 	start = resultsPerPage * int(page)
 	end = start + resultsPerPage
 	if result is None:
-		return template('search.tpl',jobs=None)	
-	return template('search.tpl', jobs=result[start:end]) 
+		return template('search.tpl',jobs=None,max=0)
+	paginateArray = generatePage(start,len(result))
+	return template('search.tpl', jobs=result[start:end],current=start,max=len(result),query=regex,paginateArray=paginateArray) 
 		
 @route('/events')
 def events():
@@ -147,17 +147,19 @@ def careerfair():
 def companyPage(comp):
 	result = []
 	print "company is " + comp;
-	cursor.execute("select * from jobs where company like %s", comp)
+	cursor.execute("select id, title, position, location, due, website from jobs where company like %s", comp)
 	for row in cursor.fetchall():
-		result.append(parseJobObject(row))
+		result.append(row)
+		#result.append(parseJobObject(row))
 	print result[0]
 	return template('company.tpl', company=comp, jobs=result)
 
 @route('/job/<thejob>')
 def jobView(thejob):
 	cursor.execute("select * from jobs where id= %s", thejob)
-	for row in cursor.fetchall():
-		myjob = parseJobObject(row)
+	#for row in cursor.fetchall():
+	#	myjob = parseJobObject(row)
+	myjob = parseJobObject(cursor.fetchone())
 	return template('job.tpl', job=myjob)
 
 @route('/apply')
@@ -183,7 +185,7 @@ def OrderedSet(list):
         if item not in mmap:
                 mmap[item] = 1
                 oset.append(item)
-	return oset;
+    return oset;
 	
 
 def parseJobObject(list):
@@ -206,7 +208,46 @@ def parseJobObject(list):
 
 @route('/tag/<job>/<newTag>')
 def tag(job,newTag):
-	newTag.replace('null','')
-	companies[job] = newTag.split(",")
+	if newTag == 'null':
+		companies[job] = []
+	else:
+		companies[job] = newTag.split(",")
 
+@route('/comp/<compname>')
+def addRemoveComp(compname):
+	for co in fave_comp:
+		if co == compname:
+			fave_comp.remove(co)
+			print "removed " + co
+			break
+	fave_comp.append(compname)
+	print "added " + compname
+
+@route('/doc/<type>/<key>/<link>')
+def docMethods(type, key, link):
+	print "in add/delete documents"
+	if type == "delete":
+		del doc[key]
+		print "delete doc"
+	else :
+		doc[key] = link
+		print "add doc"
+
+@post('/doc/add/') 
+def docAdd():
+	filename = request.forms.get('filename')
+	link = request.forms.get('link')
+	doc[filename] = link
+	print "just added doc"
+	
+def generatePage(m,current):
+    page = current //4
+    n = m //4
+    if n <= 10:
+        pages = set(range(0, n))
+    else:
+        pages = (set(range(0, 3))
+                 | set(range(max(0, page - 3), min(page + 2, n)))
+                 | set(range(n - 3, n)))
+    return pages
 run(host='ec2-54-234-44-211.compute-1.amazonaws.com', port=8080)
