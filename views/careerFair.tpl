@@ -103,18 +103,31 @@
 			$.get("/comp/"+company);
                 }
 
-/*              function changeStar(id) {
-                        if (starOn[id] == 1) {
-                                starOn[id] = 0;
-				document.getElementById(id).innerHTML = "<span class=\"glyphicon glyphicon-star-empty\"></span>";
+		function turnOn(id, comp) {
+			var comp2 = comp.replace(/ /g, "_");
+			var mainid  = "star" + id + "__" + comp2;
+			document.getElementById(mainid).innerHTML = "<span class=\"glyphicon glyphicon-star\"></span>";
+			starOn[id] = 1;
+		}
 
-                        } else {
-                                starOn[id] = 1;
-				document.getElementById(id).innerHTML = "<span class=\"glyphicon glyphicon-star\"></span>";
+		function turnOff(id, comp) {
+			var comp2 = comp.replace(/ /g, "_");
+                        var mainid  = "star" + id + "__" + comp2;
+                        document.getElementById(mainid).innerHTML = "<span class=\"glyphicon glyphicon-star-empty\"></span>";
+                        starOn[id] = 0;
 
-                        }
-                }
-*/
+		}
+
+
+		% for job in jobs:
+		%	for fav in faves:
+		%		if fav == job[1] :
+					{{!"turnOn("+str(job[0])+", "+str(job[1])+");"}}
+		%			break
+		%		else :
+					{{!"turnOff("+str(job[0])+", "+str(job[1])+");"}}
+		%	end
+		% end
 
 	</script>
     

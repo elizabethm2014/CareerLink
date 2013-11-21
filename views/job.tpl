@@ -49,7 +49,10 @@
 	<div class="container">
         <h1 id="name"></h1>
         <p id="description" class="lead"></p>
-	<a class="btn btn-lg btn-success pull-right" role="button">Apply Now!</a>
+	<!--<a id="apply" class="btn btn-lg btn-success pull-right" role="button">Apply Now!</a>-->
+	
+	<div class='pull-right'><a class="apply"><button type='submit' class='btn btn-lg btn-success'>Apply Now!</button></a></div>
+
 	</div>
 	</div>
 	<div class="container">
@@ -87,10 +90,15 @@
                 $('#company').text(elements.company);
                 $('#positions').append("<p>"+elements.positions+"</p>")
                 $('#locations').append("<p>"+elements.locations+"</p>")
-
+		$('apply').attr("href", "/apply/"+id);
                 var i=0;
                 while(tag = elements.tags[i++]){
                         $('#tags').append("<option value='"+tag+"'>"+tag+"</option>")
+			alert(tag);
+			if (tag == "applied") {
+				$('apply').removeClass("btn-success");
+				$('apply').addClass("btn-warning");
+			}
                 }
                 $('#tags').change(function() {
                         var tagVal = $('#tags').val();
@@ -133,7 +141,9 @@
 
 		$("apply").click( function() {
 			var id = element.id
+			alert("in apply click - " + id);
 			$.get("/apply/"+id);
+
 		});
 	</script>
 	

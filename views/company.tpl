@@ -76,7 +76,9 @@
 	<script>
 		var starOn = 0; //0 = empty
 		function setStar() {
-			//%if fave == true:
+			if ({{fave}} == true) {
+				starOn = 1;
+			}
 			if (starOn == 1) {
 				document.getElementById("star").innerHTML = "<span class=\"glyphicon glyphicon-star\"></span>";
 			} else {

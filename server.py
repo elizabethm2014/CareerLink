@@ -136,7 +136,7 @@ def careerfair():
 		return template('careerFair.tpl', jobs=None)
 	#return template('careerFair.tpl', jobs=result[start:end])
 	#print result[0]
-	return template('careerFair.tpl', jobs=result)
+	return template('careerFair.tpl', jobs=result, faves=fave_comp)
 
 #@route('/company')
 #def companyPage():
@@ -151,8 +151,12 @@ def companyPage(comp):
 	for row in cursor.fetchall():
 		result.append(row)
 		#result.append(parseJobObject(row))
-	print result[0]
-	return template('company.tpl', company=comp, jobs=result)
+	#print result[0]
+	isfave = "false";
+	for str in fave_comp:
+		if str == comp:
+			isfave = "true";
+	return template('company.tpl', company=comp, jobs=result, fave=isfave)
 
 @route('/job/<thejob>')
 def jobView(thejob):
@@ -162,9 +166,13 @@ def jobView(thejob):
 	myjob = parseJobObject(cursor.fetchone())
 	return template('job.tpl', job=myjob)
 
-@route('/apply')
+@route('/apply/<thejob>')
 def apply(thejob):
-	return template('apply.tpl', job=thejob, docs=doc)
+	cursor.execute("select id,title,company from jobs where id= %s", thejob)
+        #for row in cursor.fetchall():
+        #       myjob = parseJobObject(row)
+        myjob = (cursor.fetchone())
+	return template('apply.tpl', job=myjob, docs=doc)
 
 @route('/bootstrap/<filepath:path>')
 def boot(filepath):
