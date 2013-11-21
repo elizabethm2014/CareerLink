@@ -39,11 +39,11 @@
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="home">Home</a></li>
-              <li><a href="profile">Profile</a></li>
-              <li><a href="search">Search</a></li>
-              <li><a href="events">Events</a></li>
-              <li><a href="careerFair">Career Fair</a></li>
+            <li class="active"><a href="/home">Home</a></li>
+              <li><a href="/profile">Profile</a></li>
+              <li><a href="/search">Search</a></li>
+              <li><a href="/events">Events</a></li>
+              <li><a href="/careerFair">Career Fair</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -56,7 +56,7 @@
 	<div class="row search">
     		<form role="form">
     		    <div class="input-group">
-					<input type="text" class="form-control input-sm" placeholder="Search here!">
+					<input id="search" type="text" class="form-control input-sm" placeholder="Search here!">
     		        <span class="input-group-btn">
         		        <button class="btn btn-default btn-sm" type="submit"><span class="glyphicon glyphicon-search"></span></button>
     			    </span>
@@ -64,11 +64,11 @@
   		  </form>
 	</div>
 	<div class="cal">
-		<center><iframe src="https://www.google.com/calendar/embed?src=en.usa%23holiday%40group.v.calendar.google.com&ctz=America/Winnipeg" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe></center>
+		<center>
+			<iframe src="https://www.google.com/calendar/embed?title=Career%20Events&amp;mode=WEEK&amp;height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=9f5hlenimagao051c35m5c16co%40group.calendar.google.com&amp;color=%23182C57&amp;src=en.usa%23holiday%40group.v.calendar.google.com&amp;color=%232F6309&amp;ctz=America%2FChicago" style=" border-width:0 " width="800" height="600" frameborder="0" scrolling="no"></iframe>
+		</center>
 	</div>
 </div>
-
-
 
 
 
@@ -78,4 +78,16 @@
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
   </body>
+
+<script>
+$('#search').keypress(function(e) {
+  if (e.which == '13') {
+	var query = $('#search').val();
+	query.replace(/ /g,'+');	
+	window.location = "/search/0/"+query;
+	return false;
+   }
+});
+</script>
+
 </html>

@@ -31,17 +31,50 @@
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="home.html">Home</a></li>
-              <li><a href="profile.html">Profile</a></li>
-              <li><a href="search.html">Search</a></li>
-              <li><a href="events.html">Events</a></li>
-              <li class="active"><a href="careerFair.html">Career Fair</a></li>
+            <li><a href="/home">Home</a></li>
+              <li><a href="/profile">Profile</a></li>
+              <li><a href="/search">Search</a></li>
+              <li><a href="/events">Events</a></li>
+              <li class="active"><a href="/careerFair">Career Fair</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
     </div>
+
+	<div class="container">
     
+	<table class="table table-striped" id="companies">
+ 		<thead>
+			<tr>
+				<th>Company</th>
+				<th>Website</th>
+				<th>Location(s)</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			%for job in jobs:
+			<tr>
+				<td><a href="/company/{{job[1]}}">{{job[1]}}</a></td>
+				<td>{{job[2]}}</td>
+				<td>{{job[3]}}</td>
+				<td><button type="button" class="btn btn-default" id="star{{job[0]}}"></button></td>
+			</tr>
+			%end
+		</tbody>
+	</table>
+	</div>
+	<script type="text/javascript">
+		function setStar() {
+			for (var i = 0; i < document.getElementById("companies").rows -1; i++) {
+				var nextstar = "star" + i;
+				document.getElementById(nextstar).innerHTML = "<span class=\"glyphicon glyphicon-star-empty\"></span>";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", setStar, false);
+	</script>
     
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
   </body>
 </html>

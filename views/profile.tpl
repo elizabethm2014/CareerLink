@@ -18,79 +18,7 @@
 	
 	<script type="application/javascript">
 		var username;
-	
-		function DeleteJob(id){
-			alert("going to delete job with id = " + id);
-			var http_request = new XMLHttpRequest();
-		   try{
-			  // Opera 8.0+, Firefox, Chrome, Safari
-			  http_request = new XMLHttpRequest();
-		   }catch (e){
-			  // Internet Explorer Browsers
-			  try{
-				 http_request = new ActiveXObject("Msxml2.XMLHTTP");
-			  }catch (e) {
-				 try{
-					http_request = new ActiveXObject("Microsoft.XMLHTTP");
-				 }catch (e){
-					// Something went wrong
-					alert("Your browser broke!");
-					return false;
-				 }
-			  }
-		   }
-		   http_request.open("GET", "http://students.cec.wustl.edu/~morane/CareerLink/DeleteItem.pl", true);
-		   http_request.send("username="+username+"&id="+id+"&type=job");
-		}
-		
-		function RemoveCompany(id) {
-			var http_request = new XMLHttpRequest();
-		   try{
-			  // Opera 8.0+, Firefox, Chrome, Safari
-			  http_request = new XMLHttpRequest();
-		   }catch (e){
-			  // Internet Explorer Browsers
-			  try{
-				 http_request = new ActiveXObject("Msxml2.XMLHTTP");
-			  }catch (e) {
-				 try{
-					http_request = new ActiveXObject("Microsoft.XMLHTTP");
-				 }catch (e){
-					// Something went wrong
-					alert("Your browser broke!");
-					return false;
-				 }
-			  }
-		   }
-		   http_request.open("GET", "http://students.cec.wustl.edu/~morane/CareerLink/DeleteItem.pl", true);
-		   http_request.send("username="+username+"&id="+id+"&type=company");
-		   //loadJSON();
-		}
-		
-		function DeleteDoc(id) {
-			var http_request = new XMLHttpRequest();
-		   try{
-			  // Opera 8.0+, Firefox, Chrome, Safari
-			  http_request = new XMLHttpRequest();
-		   }catch (e){
-			  // Internet Explorer Browsers
-			  try{
-				 http_request = new ActiveXObject("Msxml2.XMLHTTP");
-			  }catch (e) {
-				 try{
-					http_request = new ActiveXObject("Microsoft.XMLHTTP");
-				 }catch (e){
-					// Something went wrong
-					alert("Your browser broke!");
-					return false;
-				 }
-			  }
-		   }
-		   http_request.open("POST", "http://students.cec.wustl.edu/~morane/CareerLink/DeleteItem.pl", true);
-		   http_request.send("username="+username+"&id="+id+"&type=document");
-		   //loadJSON();
-		}
-	
+
 		function readCookie(name) {
 			var i, c, ca, nameEQ = name + "=";
 			ca = document.cookie.split(';');
@@ -100,7 +28,7 @@
 					c = c.substring(1,c.length);
 				}
 				if (c.indexOf(nameEQ) == 0) {
-					alert("found cooke - name = " + name);
+					//alert("found cookie - name = " + name);
 					return c.substring(nameEQ.length,c.length);
 				}
 			}
@@ -110,84 +38,77 @@
 		function loadJSON()
 		{
 			//get username from cookie
-			username = readCookie("username");
-		   //var username = "james";
-		   var data_file = "http://students.cec.wustl.edu/~morane/CareerLink/"+username+"_profile.json";
-		   var http_request = new XMLHttpRequest();
-		   try{
-			  // Opera 8.0+, Firefox, Chrome, Safari
-			  http_request = new XMLHttpRequest();
-		   }catch (e){
-			  // Internet Explorer Browsers
-			  try{
-				 http_request = new ActiveXObject("Msxml2.XMLHTTP");
-			  }catch (e) {
-				 try{
-					http_request = new ActiveXObject("Microsoft.XMLHTTP");
-				 }catch (e){
-					// Something went wrong
-					alert("Your browser broke!");
-					return false;
-				 }
-			  }
-		   }
-		   http_request.onreadystatechange  = function(){
-			  if (http_request.readyState == 4  )
-			  {
-				var jsonObj = JSON.parse(http_request.responseText);
-				document.getElementById("student_name").innerHTML = jsonObj.name+" <small>"+jsonObj.year+" | "+jsonObj.major+"</small>";
-				
-				//get all jobs
-				var jobtable = document.getElementById("tagged_jobs");
-				for (var i = 0; i < jsonObj.tagged_jobs.length; i++) {
-					var id = "job_" + jsonObj.tagged_jobs[i].id;
-					var row = jobtable.insertRow(1);
-					var cell1 = row.insertCell(0);
-					cell1.innerHTML="<button type=\"button\" class=\"btn btn-default btn-sm\" id=\""+ id+"\" onclick=\"DeleteJob("+jsonObj.tagged_jobs[i].id+")\"><span class=\"glyphicon glyphicon-trash\"></span></button>";
-					var cellTitle = row.insertCell(1);
-					cellTitle.innerHTML = jsonObj.tagged_jobs[i].title;
-					var cellComp = row.insertCell(2);
-					cellComp.innerHTML = jsonObj.tagged_jobs[i].company
-					var cellLoc = row.insertCell(3);
-					cellLoc.innerHTML = jsonObj.tagged_jobs[i].locations;
-					var cellDead = row.insertCell(4);
-					cellDead.innerHTML = jsonObj.tagged_jobs[i].deadline;
-					var cellPost = row.insertCell(5);
-					cellPost.innerHTML = jsonObj.tagged_jobs[i].posted;
-					//document.getElementById(id).addEventListener("click", DeleteJob(jsonObj.tagged_jobs[i].id), false);
-				}
+			username = readCookie("account");
+			var name;
+			var major;
+			var year;
+			if (username == "james") {
+				name = "James Thompson";
+				major = "chemical engineering";
+				year = "sophomore";
+			}
+			else if (username == "leah") {
+				name = "Leah Brown";
+				major = "biology";
+				year = "senior";
+			} else if (username == "tiffany") {
+				name = "Tiffany Young";
+				major = "marketing";
+				year = "junior";
+			} else {
+				name = "Paul Jones";
+				major = "computer science";
+				year = "senior";
+			}
+			document.getElementById("student_name").innerHTML = name+" <small>"+ year+" | "+major+"</small>";
+		}		
+	
+		function addJob(job)
+		{	
+			//get all jobs
+			var jobtable = document.getElementById("tagged_jobs");
+			var id = "job_" + job.id;
+			var row = jobtable.insertRow(1);
+			var cell1 = row.insertCell(0);
+			cell1.innerHTML="<button type=\"button\" class=\"btn btn-default btn-sm\" id=\""+ id+"\" onclick=\"DeleteJob("+job.id+")\"><span class=\"glyphicon glyphicon-trash\"></span></button>";
+			var cellTitle = row.insertCell(1);
+			cellTitle.innerHTML = job.title;
+			var cellComp = row.insertCell(2);
+			cellComp.innerHTML = job.company;
+			var cellLoc = row.insertCell(3);
+			cellLoc.innerHTML = job.locations
+			var cellDead = row.insertCell(4);
+			cellDead.innerHTML = job.deadline;
+				//document.getElementById(id).addEventListener("click", DeleteJob(jsonObj.tagged_jobs[i].id), false);
+		}
 				
 				//get all companies
-				var cmptable = document.getElementById("fave_companies");
-				for (var j=0; j < jsonObj.fave_companies.length; j++) {
-					var row2 = cmptable.insertRow(1);
-					var cell2 = row2.insertCell(0);
-					cell2.innerHTML="<button type=\"button\" class=\"btn btn-default btn-sm\" onclick=\"RemoveCompany("+jsonObj.fave_companies[j].id+")\"><span class=\"glyphicon glyphicon-trash\"></span></button>";
-					var cellTitle = row2.insertCell(1);
-					cellTitle.innerHTML=jsonObj.fave_companies[j].name;
-					var cellCareer = row2.insertCell(2);
-					if (jsonObj.fave_companies[j].careerFair == "true") {
-						cellCareer.innerHTML = "<p><span class=\"glyphicon glyphicon-ok\"></span></p>";
-					}
-				}
-				
-				//get all documents
-				var doctable = document.getElementById("documents");
-				for (var k = 0; k < jsonObj.doc_links.length; k++) {
-					var row3 = doctable.insertRow(1);
-					var cellEdit = row3.insertCell(0);
-					/*cellEdit.innerHTML="<button type=\"button\" class=\"btn btn-default btn-sm\" formtarget=\"_blank\" onclick=\"window.open(\'"+jsonObj.doc_links[k].link+"\')><span class=\"glyphicon glyphicon-pencil\"></span></button>"; */
-					cellEdit.innerHTML="<a href=\"" +jsonObj.doc_links[k].link+"\"><span class=\"glyphicon glyphicon-pencil\"></span></a>";
-					var cellDelete = row3.insertCell(1);
-					cellDelete.innerHTML="<button type=\"button\" class=\"btn btn-default btn-sm\" onclick=\"DeleteDoc("+jsonObj.doc_links[k].id+")\"><span class=\"glyphicon glyphicon-trash\"></span></button>";
-					var cell3 = row3.insertCell(2);
-					cell3.innerHTML=jsonObj.doc_links[k].title;
-				}
-			  }
-		   }
-		   http_request.open("GET", data_file, true);
-		   http_request.send();
+		function addCompany(company)
+		{	
+			var cmptable = document.getElementById("fave_companies");
+			var row2 = cmptable.insertRow(1);
+			var cell2 = row2.insertCell(0);
+			cell2.innerHTML="<button type=\"button\" class=\"btn btn-default btn-sm\" onclick=\"RemoveCompany("+company.id+")\"><span class=\"glyphicon glyphicon-trash\"></span></button>";
+			var cellTitle = row2.insertCell(1);
+			cellTitle.innerHTML=company.name;
+			var cellCareer = row2.insertCell(2);
+			cellCareer.innerHTML = "<p><span class=\"glyphicon glyphicon-ok\"></span></p>";
 		}
+				
+		//get all documents
+		function addDocument(doc) 
+		{		
+			var doctable = document.getElementById("documents");
+			var row3 = doctable.insertRow(1);
+			var cellEdit = row3.insertCell(0);
+			//cellEdit.innerHTML="<button type=\"button\" class=\"btn btn-default btn-sm\" formtarget=\"_blank\" onclick=\"window.open(\'"+jsonObj.doc_links[k].link+"\')><span class=\"glyphicon glyphicon-pencil\"></span></button>"; 
+			cellEdit.innerHTML="<a href=\"" +doc.link+"\"><span class=\"glyphicon glyphicon-pencil\"></span></a>";
+			var cellDelete = row3.insertCell(1);
+			cellDelete.innerHTML="<button type=\"button\" class=\"btn btn-default btn-sm\" onclick=\"DeleteDoc("+doc.id+")\"><span class=\"glyphicon glyphicon-trash\"></span></button>";
+			var cell3 = row3.insertCell(2);
+			cell3.innerHTML=doc.title;			  
+		 }
+
 		document.addEventListener("DOMContentLoaded", loadJSON, false);
 		
 		
@@ -240,11 +161,30 @@
 							<th>Company</th>
 							<th>Location(s)</th>
 							<th>Deadline</th>
-							<th>Posted</th>
+							<!--th>Posted</th-->
 						</tr>
 					</thead>
+					<tbody>
+						
+						%for item in jobs:
+						<tr>
+							<!--script type="text/javascript">alert({{item}});
+							alert({{item[0]}});</script-->
+							<td><button type="button" class="btn btn-default btn-sm" onclick="DeleteJob({{item[0]}})"><span class="glyphicon glyphicon-trash"></span></button></td>
+							<td>{{item[1]}}</td>
+							<td>{{item[2]}}</td>
+							<td>{{item[3]}}</td>
+							<td>{{item[4]}}</td>
+						</tr>	
+						%end
+					</tbody>
 				</table>
 			</div>
+			%for item in jobs:
+			<p>start of item</p>
+			<p>{{item}}</p>
+			<p>end of item<p>
+			%end
 		  </div>
 		  <div class="panel panel-default">
 			<div class="panel-heading">
@@ -265,6 +205,15 @@
 						<th>Career Fair</th>
 					</tr>
 				</thead>
+				<tbody>
+					%for comp in fave_comps:
+					<tr>
+						<td><button type="button" class="btn btn-default btn-sm" id="{{comp}}" onclick="DeleteJob({{comp}})"><span class="glyphicon glyphicon-trash"></span></button></td>
+						<td><a href="/company/{{comp}}">{{comp}}</a></td>
+						<td><center><span class="glyphicon glyphicon-ok"></span></center></td>
+					</tr>
+					%end
+				</tbody>
 			  </table>
 			</div>
 		  </div>
@@ -288,6 +237,15 @@
 						<!--<th>Last Updated On</th>-->
 					</tr>
 				</thead>
+				<tbody>
+					%for key in docs:
+					<tr>
+						<td><button type="button" class="btn btn-default btn-sm" id="{{key}}" onclick="DeleteJob({{key}})"><span class="glyphicon glyphicon-trash"></span></button></td>
+						<td><button type="button" class="btn btn-default btn-sm"><a href="{{docs[key]}}"><span class="glyphicon glyphicon-pencil"></span></a></button></td>
+						<td>{{key}}</td>
+					</tr>
+					%end
+				</tbody>
 			  </table>
 			  <button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> Add Document</button>
 			</div>
